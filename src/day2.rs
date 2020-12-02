@@ -1,27 +1,28 @@
 use regex::Regex;
+use std::error::Error;
 
-pub fn is_valid(input: &str, re: &Regex) -> bool {
+pub fn is_valid(input: &str, re: &Regex) -> Result<bool, Box<dyn Error>> {
     let input = input.trim();
-    let segments = re.captures(input).expect("invalid input");
-    let min: usize = segments.get(1).unwrap().as_str().parse().unwrap();
-    let max: usize = segments.get(2).unwrap().as_str().parse().unwrap();
-    let pattern: &str = segments.get(3).unwrap().as_str();
-    let mut password = "%".to_owned();
-    password.push_str(segments.get(4).unwrap().as_str());
-    password.push('%');
+    let segments = re.captures(input).ok_or_else(|| "Applying regex capture failed")?;
+    let min: usize = segments.get(1).ok_or_else(|| "no first segment")?.as_str().parse()?;
+    let max: usize = segments.get(2).ok_or_else(|| "no second segment")?.as_str().parse()?;
+    let pattern: &str = segments.get(3).ok_or_else(|| "no third segment")?.as_str();
+    let password = format!("%{}%", segments.get(4).ok_or_else(|| "no fourth segment")?.as_str());
     let parts_split = password.split(pattern).count();
-    parts_split > min && parts_split - 1 <= max
+    Ok(parts_split > min && parts_split - 1 <= max)
 }
 
-pub fn is_valid_new_policy(password: &str, re: &Regex) -> bool {
-    let input = password.trim();
-    let segments = re.captures(input).expect("invalid input");
-    let min: usize = segments.get(1).unwrap().as_str().parse().unwrap();
-    let max: usize = segments.get(2).unwrap().as_str().parse().unwrap();
-    let pattern: char = segments.get(3).unwrap().as_str().chars().next().unwrap();
-    let password = segments.get(4).unwrap().as_str();
+pub fn is_valid_new_policy(password: &str, re: &Regex) -> Result<bool, Box<dyn Error>> {
+    let password = password.trim();
+    let segments = re.captures(password).ok_or_else(|| "Applying regex capture failed")?;
+    let min: usize = segments.get(1).ok_or_else(|| "no first segment")?.as_str().parse()?;
+    let max: usize = segments.get(2).ok_or_else(|| "no second segment")?.as_str().parse()?;
+    let pattern: char = segments.get(3).ok_or_else(|| "no third segment")?.as_str().chars().next().ok_or_else(|| "pattern is empty")?;
+    let password = segments.get(4).ok_or_else(|| "no fourth segment")?.as_str();
     let chars: Vec<char> = password.chars().collect();
-    (*chars.get(min - 1).unwrap() == pattern) ^ (*chars.get(max - 1).unwrap() == pattern)
+    let first_is_match = *chars.get(min - 1).ok_or_else(|| "min value is zero")? == pattern;
+    let second_is_match = *chars.get(max - 1).ok_or_else(|| "max value is higher than password length")? == pattern;
+    Ok(first_is_match ^ second_is_match)
 }
 
 pub fn get_regex() -> Regex {
@@ -35,9 +36,9 @@ mod tests {
     #[test]
     fn test_is_valid() {
         let re = get_regex();
-        assert_eq!(true, is_valid("1-3 a: abcde", &re), "1-3 a: abcde");
-        assert_eq!(false, is_valid("1-3 b: cdefg", &re), "1-3 b: cdefg");
-        assert_eq!(true, is_valid("2-9 c: ccccccccc", &re), "2-9 c: ccccccccc");
+        assert_eq!(true, is_valid("1-3 a: abcde", &re).unwrap(), "1-3 a: abcde");
+        assert_eq!(false, is_valid("1-3 b: cdefg", &re).unwrap(), "1-3 b: cdefg");
+        assert_eq!(true, is_valid("2-9 c: ccccccccc", &re).unwrap(), "2-9 c: ccccccccc");
     }
 
 
@@ -48,7 +49,7 @@ mod tests {
         let re = get_regex();
         let mut valid_pws = 0;
         for entry in input.trim().split("\n") {
-            if is_valid(entry, &re) {
+            if is_valid(entry, &re).unwrap() {
                 valid_pws += 1;
             }
         }
@@ -57,7 +58,7 @@ mod tests {
 
     #[test]
     fn test_part2_examples() {
-        assert_eq!(true, is_valid_new_policy("1-3 a: abcde", &get_regex()), "1-3 a: abcde");
+        assert_eq!(true, is_valid_new_policy("1-3 a: abcde", &get_regex()).unwrap(), "1-3 a: abcde");
     }
 
     #[test]
@@ -67,7 +68,7 @@ mod tests {
         let re = get_regex();
         let mut valid_pws = 0;
         for entry in input.trim().split("\n") {
-            if is_valid_new_policy(entry, &re) {
+            if is_valid_new_policy(entry, &re).unwrap() {
                 valid_pws += 1;
             }
         }
