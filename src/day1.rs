@@ -1,7 +1,7 @@
 pub fn day1a(input: &str) -> Option<usize> {
     let expenses: Vec<usize> = input
         .trim()
-        .split("\n")
+        .split('\n')
         .map(|x| {
             x.parse().unwrap()
         })
@@ -19,7 +19,7 @@ pub fn day1a(input: &str) -> Option<usize> {
 pub fn day1b(input: &str) -> Option<usize> {
     let expenses: Vec<usize> = input
         .trim()
-        .split("\n")
+        .split('\n')
         .map(|x| {
             x.parse().unwrap()
         })
