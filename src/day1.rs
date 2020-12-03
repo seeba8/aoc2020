@@ -6,8 +6,8 @@ pub fn day1a(input: &str) -> Option<usize> {
             x.parse().unwrap()
         })
         .collect();
-    for x in expenses.iter() {
-        for y in expenses.iter() {
+    for x in &expenses {
+        for y in &expenses {
             if x + y == 2020 {
                 return Some(x * y);
             }

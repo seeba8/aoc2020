@@ -1,5 +1,6 @@
 mod day1;
 mod day2;
+mod day3;
 
 #[cfg(test)]
 mod tests {
