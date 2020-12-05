@@ -11,13 +11,13 @@ fn get_seat_id(boarding_pass: &str) -> Result<usize, Box<dyn Error>> {
     Ok(8 * row + col)
 }
 
-fn get_highest_id(boarding_passes: &str) -> Result<usize, Box<dyn Error>> {
+pub fn get_highest_id(boarding_passes: &str) -> Result<usize, Box<dyn Error>> {
     Ok(boarding_passes.trim().split('\n')
         .filter_map(|pass| get_seat_id(pass).ok())
         .max().ok_or("Error calculating max")?)
 }
 
-fn get_missing_id(boarding_passes: &str) -> Result<usize, &str> {
+pub fn get_missing_id(boarding_passes: &str) -> Result<usize, &str> {
     let mut passes: Vec<usize> = boarding_passes.trim().split('\n')
         .filter_map(|pass| get_seat_id(pass).ok())
         .collect();

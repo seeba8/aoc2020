@@ -1,11 +1,15 @@
 use regex::Regex;
 
-fn is_valid_passport(input: &str, required_fields: &[&str]) -> bool {
+lazy_static! {
+    static ref REQUIRED_FIELDS: [&'static str;7] = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
+}
+
+fn is_valid_passport(input: &str) -> bool {
     let input = input.trim();
     let field_names: Vec<&str> = input.split_ascii_whitespace()
         .map(|x| &x[..3])
         .collect();
-    for requirement in required_fields {
+    for requirement in REQUIRED_FIELDS.iter() {
         if !field_names.contains(&requirement) {
             return false;
         }
@@ -74,10 +78,10 @@ fn is_valid_passport_data(input: &str) -> bool {
     true
 }
 
-fn count_valid_passports(batch_file: &str, required_fields: &[&str], check_data: bool) -> usize {
+pub fn count_valid_passports(batch_file: &str, check_data: bool) -> usize {
     batch_file.split("\n\n")
         .map(|passport|
-            if is_valid_passport(passport, required_fields)
+            if is_valid_passport(passport)
                 && (!check_data || is_valid_passport_data(passport))
             { 1 } else { 0 }
         )
@@ -90,7 +94,6 @@ mod tests {
 
     #[test]
     fn test_is_valid_passport() {
-        let required_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
         let input = r"ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
@@ -106,15 +109,14 @@ hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in
 ";
         let mut iter = input.split("\n\n");
-        assert_eq!(true, is_valid_passport(iter.next().unwrap(), &required_fields));
-        assert_eq!(false, is_valid_passport(iter.next().unwrap(), &required_fields));
-        assert_eq!(true, is_valid_passport(iter.next().unwrap(), &required_fields));
-        assert_eq!(false, is_valid_passport(iter.next().unwrap(), &required_fields));
+        assert_eq!(true, is_valid_passport(iter.next().unwrap()));
+        assert_eq!(false, is_valid_passport(iter.next().unwrap()));
+        assert_eq!(true, is_valid_passport(iter.next().unwrap()));
+        assert_eq!(false, is_valid_passport(iter.next().unwrap()));
     }
 
     #[test]
     fn test_count_valid_passports() {
-        let required_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
         let input = r"ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
@@ -129,13 +131,12 @@ hgt:179cm
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in
 ";
-        assert_eq!(2, count_valid_passports(input, &required_fields, false));
+        assert_eq!(2, count_valid_passports(input, false));
     }
 
     #[test]
     fn test_part1() {
-        let required_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
-        println!("{}", count_valid_passports(std::fs::read_to_string("resources/day4.txt").unwrap().as_str(), &required_fields, false));
+        println!("{}", count_valid_passports(std::fs::read_to_string("resources/day4.txt").unwrap().as_str(), false));
     }
 
     #[test]
@@ -162,8 +163,7 @@ iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719"));
 
     #[test]
     fn test_part2() {
-        let required_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
-        println!("{}", count_valid_passports(std::fs::read_to_string("resources/day4.txt").unwrap().as_str(), &required_fields, true));
+        println!("{}", count_valid_passports(std::fs::read_to_string("resources/day4.txt").unwrap().as_str(), true));
     }
 
     #[test]

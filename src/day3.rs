@@ -1,6 +1,6 @@
 use std::error::Error;
 
-fn slide_down(map: &str, right: usize, down: usize) -> Result<usize, Box<dyn Error>> {
+pub fn slide_down(map: &str, right: usize, down: usize) -> Result<usize, Box<dyn Error>> {
     let map = map.trim();
     let mut position_x = 0;
     let mut num_trees: usize = 0;
@@ -14,7 +14,7 @@ fn slide_down(map: &str, right: usize, down: usize) -> Result<usize, Box<dyn Err
     Ok(num_trees)
 }
 
-fn multiply_slopes(map: &str) -> Result<usize, Box<dyn Error>> {
+pub fn multiply_slopes(map: &str) -> Result<usize, Box<dyn Error>> {
     let mut product = 1;
     product *= slide_down(map, 1, 1)?;
     product *= slide_down(map, 3, 1)?;

@@ -36,7 +36,6 @@ pub fn day1b(input: &str) -> Option<usize> {
     None
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
