@@ -8,6 +8,7 @@ mod day2;
 mod day3;
 mod day4;
 mod day5;
+mod day6;
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();
@@ -29,4 +30,8 @@ fn main() {
     let input = read_to_string("resources/day5.txt").unwrap();
     println!("Day 5 part 1: {:?}", day5::get_highest_id(input.as_str()));
     println!("Day 5 part 2: {:?}", day5::get_missing_id(input.as_str()));
+
+    let input = read_to_string("resources/day6.txt").unwrap();
+    println!("Day 6 part 1: {:?}", day6::get_sum_of_distinct_answers(input.as_str()));
+    println!("Day 6 part 2: {:?}", day6::get_sum_of_common_answers(input.as_str()));
 }
