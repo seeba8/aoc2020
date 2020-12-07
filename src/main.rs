@@ -1,3 +1,4 @@
+#![feature(str_split_once)]
 #[macro_use]
 extern crate lazy_static;
 
@@ -9,8 +10,10 @@ mod day3;
 mod day4;
 mod day5;
 mod day6;
+mod day7;
 
 fn main() {
+
     let input = read_to_string("resources/day1.txt").unwrap();
     println!("Day 1 part 1: {:?}", day1::day1a(input.as_str()));
     println!("Day 1 part 2: {:?}", day1::day1b(input.as_str()));
@@ -34,4 +37,9 @@ fn main() {
     let input = read_to_string("resources/day6.txt").unwrap();
     println!("Day 6 part 1: {:?}", day6::get_sum_of_distinct_answers(input.as_str()));
     println!("Day 6 part 2: {:?}", day6::get_sum_of_common_answers(input.as_str()));
+
+    let input = read_to_string("resources/day7.txt").unwrap();
+    println!("Day 7 part 1: {:?}", day7::get_number_of_possible_bags(input.as_str(), "shiny gold"));
+    println!("Day 7 part 2: {:?}", day7::get_number_of_contained_bags(input.as_str(), "shiny gold"));
 }
+

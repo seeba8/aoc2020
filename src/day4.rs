@@ -19,25 +19,25 @@ fn is_valid_passport(input: &str) -> bool {
 
 fn is_valid_byr(field_value: &str) -> bool {
     let field_value: usize = field_value.parse().unwrap();
-    !(field_value < 1920 || field_value > 2002)
+    (1920..=2002).contains(&field_value)
 }
 
 fn is_valid_iyr(field_value: &str) -> bool {
     let field_value: usize = field_value.parse().unwrap();
-    !(field_value < 2010 || field_value > 2020)
+    (2010..=2020).contains(&field_value)
 }
 
 fn is_valid_eyr(field_value: &str) -> bool {
     let field_value: usize = field_value.parse().unwrap();
-    !(field_value < 2020 || field_value > 2030)
+    (2020..=2030).contains(&field_value)
 }
 
 fn is_valid_hgt(field_value: &str) -> bool {
     if !field_value.ends_with("in") && !field_value.ends_with("cm") { return false; }
     let height: usize = field_value[..field_value.len() - 2].parse().unwrap();
     if field_value.ends_with("cm") {
-        if height < 150 || height > 193 { return false; }
-    } else if height < 59 || height > 76 { return false; }
+        if !(150..=193).contains(&height) { return false; }
+    } else if !(59..=76).contains(&height) { return false; }
     true
 }
 
