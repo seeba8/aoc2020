@@ -48,5 +48,11 @@ fn main() {
     let instructions = day8::parse_input(input.as_str());
     println!("Day 8 part 1: {:?}", day8::execute(&instructions));
     println!("Day 8 part 2: {:?}", day8::execute2(instructions));
+
+    let input = read_to_string("resources/day9.txt").unwrap();
+    let part1 = day9::get_error(input.as_str(), 25);
+    println!("Day 9 part 1: {:?}", part1);
+    println!("Day 9 part 2: {:?}", day9::get_delta_of_contiguous_set(input.as_str(), part1));
+
 }
 

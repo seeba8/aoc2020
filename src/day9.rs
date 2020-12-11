@@ -29,13 +29,17 @@ fn is_sum_of_previous_elems(data: &[usize], preamble_length: usize, index: usize
 
 pub fn get_delta_of_contiguous_set(data: &str, target_sum: usize) -> usize {
     let data = parse_input(data);
+
     for start in 0..data.len() - 1 {
-        for end in start + 1..data.len() {
-            let s: usize = data[start..end].iter().sum();
-            if s == target_sum {
-                println!("start: {}, end: {}", start, end);
-                return data[start..end].iter().max().unwrap() + data[start..end].iter().min().unwrap();
-            }
+        let mut sum: usize = 0;
+        let mut min_val = usize::max_value();
+        let mut max_val: usize = 0;
+        for val in data.iter().skip(start) {
+            sum += val;
+            if *val < min_val { min_val = *val; }
+            if *val > max_val { max_val = *val; }
+            if sum == target_sum { return max_val + min_val; }
+            if sum > target_sum { break; }
         }
     }
     panic!("no suitable delta found");
