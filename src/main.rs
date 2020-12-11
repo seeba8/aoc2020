@@ -11,6 +11,7 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 fn main() {
 
@@ -41,5 +42,10 @@ fn main() {
     let input = read_to_string("resources/day7.txt").unwrap();
     println!("Day 7 part 1: {:?}", day7::get_number_of_possible_bags(input.as_str(), "shiny gold"));
     println!("Day 7 part 2: {:?}", day7::get_number_of_contained_bags(input.as_str(), "shiny gold"));
+
+    let input = read_to_string("resources/day8.txt").unwrap();
+    let instructions = day8::parse_input(input.as_str());
+    println!("Day 8 part 1: {:?}", day8::execute(&instructions));
+    println!("Day 8 part 2: {:?}", day8::execute2(instructions));
 }
 
