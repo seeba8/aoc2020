@@ -120,7 +120,7 @@ jmp +4";
 
     #[test]
     fn test() {
-        let mut accumulator: isize = 0;
+        let accumulator: isize = 0;
         let instr = Instruction {
             operation: Operation::ACC,
             argument: 2,
