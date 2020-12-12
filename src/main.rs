@@ -13,6 +13,7 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
+mod day10;
 
 fn main() {
 
@@ -53,6 +54,10 @@ fn main() {
     let part1 = day9::get_error(input.as_str(), 25);
     println!("Day 9 part 1: {:?}", part1);
     println!("Day 9 part 2: {:?}", day9::get_delta_of_contiguous_set(input.as_str(), part1));
+
+    let input = read_to_string("resources/day10.txt").unwrap();
+    println!("Day 10 part 1: {:?}", day10::get_jolt_difference(input.as_str()));
+    println!("Day 10 part 2: {:?}", day10::get_number_of_possible_arrangements(input.as_str()));
 
 }
 
