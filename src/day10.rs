@@ -87,7 +87,7 @@ fn get_clusters(adapters: &[u8]) -> Vec<(usize, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use crate::day10::{parse_input, get_jolt_difference, get_number_of_possible_arrangements, get_clusters, get_number_of_possible_arrangements_recursive};
+    use crate::day10::{parse_input, get_jolt_difference, get_number_of_possible_arrangements, get_clusters};
 
     //   use super::*;
     #[test]

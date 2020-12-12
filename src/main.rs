@@ -14,9 +14,10 @@ mod day7;
 mod day8;
 mod day9;
 mod day10;
+mod day11;
+mod day12;
 
 fn main() {
-
     let input = read_to_string("resources/day1.txt").unwrap();
     println!("Day 1 part 1: {:?}", day1::day1a(input.as_str()));
     println!("Day 1 part 2: {:?}", day1::day1b(input.as_str()));
@@ -59,5 +60,8 @@ fn main() {
     println!("Day 10 part 1: {:?}", day10::get_jolt_difference(input.as_str()));
     println!("Day 10 part 2: {:?}", day10::get_number_of_possible_arrangements(input.as_str()));
 
+    let input = std::fs::read_to_string("resources/day11.txt").unwrap();
+    println!("Day 11 part 1: {}", day11::get_number_of_occupied_seats_after_stabilisation(input.as_str(), 4, 1));
+    println!("Day 11 part 1: {}", day11::get_number_of_occupied_seats_after_stabilisation(input.as_str(), 5, isize::max_value() as usize));
 }
 
