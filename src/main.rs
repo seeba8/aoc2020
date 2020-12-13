@@ -16,6 +16,7 @@ mod day9;
 mod day10;
 mod day11;
 mod day12;
+mod day13;
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();
@@ -60,8 +61,15 @@ fn main() {
     println!("Day 10 part 1: {:?}", day10::get_jolt_difference(input.as_str()));
     println!("Day 10 part 2: {:?}", day10::get_number_of_possible_arrangements(input.as_str()));
 
-    let input = std::fs::read_to_string("resources/day11.txt").unwrap();
+    let input = read_to_string("resources/day11.txt").unwrap();
     println!("Day 11 part 1: {}", day11::get_number_of_occupied_seats_after_stabilisation(input.as_str(), 4, 1));
-    println!("Day 11 part 1: {}", day11::get_number_of_occupied_seats_after_stabilisation(input.as_str(), 5, isize::max_value() as usize));
+    println!("Day 11 part 2: {}", day11::get_number_of_occupied_seats_after_stabilisation(input.as_str(), 5, isize::max_value() as usize));
+
+    let input = read_to_string("resources/day12.txt").unwrap();
+    println!("Day 12 part 1: {}", day12::get_travel_distance(input.as_str(), false));
+    println!("Day 12 part 2: {}", day12::get_travel_distance(input.as_str(), true));
+
+    let input = read_to_string("resources/day13.txt").unwrap();
+    println!("{}", day13::get_timestamp_sequence(input.as_str()));
 }
 
