@@ -69,7 +69,9 @@ fn main() {
     println!("Day 12 part 1: {}", day12::get_travel_distance(input.as_str(), false));
     println!("Day 12 part 2: {}", day12::get_travel_distance(input.as_str(), true));
 
-    let input = read_to_string("resources/day13.txt").unwrap();
-    println!("{}", day13::get_timestamp_sequence(input.as_str()));
+    let input = std::fs::read_to_string("resources/day13.txt").unwrap();
+    let (bus, wait) = day13::get_earliest_bus(input.as_str());
+    println!("Day 13 part 1: best bus: {}, wait: {} => {}", bus, wait, bus * wait);
+    println!("Day 13 part 2{}", day13::get_timestamp_sequence(input.as_str()));
 }
 
