@@ -143,15 +143,6 @@ mod tests {
     }
 
     #[test]
-    fn test_part2_examples() {
-        assert_eq!(3417, get_timestamp_sequence_busses("17,x,13,19"));
-        assert_eq!(754018, get_timestamp_sequence_busses("67,7,59,61"));
-        assert_eq!(779210, get_timestamp_sequence_busses("67,x,7,59,61"));
-        assert_eq!(1261476, get_timestamp_sequence_busses("67,7,x,59,61"));
-        assert_eq!(1202161486, get_timestamp_sequence_busses("1789,37,47,1889"));
-    }
-
-    #[test]
     fn test_part2() {
         let input = std::fs::read_to_string("resources/day13.txt").unwrap();
         println!("{}", get_timestamp_sequence(input.as_str()));

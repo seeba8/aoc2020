@@ -17,6 +17,7 @@ mod day10;
 mod day11;
 mod day12;
 mod day13;
+mod day14;
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();
@@ -72,6 +73,14 @@ fn main() {
     let input = std::fs::read_to_string("resources/day13.txt").unwrap();
     let (bus, wait) = day13::get_earliest_bus(input.as_str());
     println!("Day 13 part 1: best bus: {}, wait: {} => {}", bus, wait, bus * wait);
-    println!("Day 13 part 2{}", day13::get_timestamp_sequence(input.as_str()));
+    println!("Day 13 part 2: {}", day13::get_timestamp_sequence(input.as_str()));
+
+    let input = std::fs::read_to_string("resources/day14.txt").unwrap();
+    let mut decoder = day14::Decoder::new(day14::DecoderVersion::V1);
+    decoder.run_programme(input.as_str()).unwrap();
+    println!("Day 14 part 1: {}", decoder.get_sum_of_memory());
+    let mut decoder = day14::Decoder::new(day14::DecoderVersion::V2);
+    decoder.run_programme(input.as_str()).unwrap();
+    println!("Day 14 part 2: {}", decoder.get_sum_of_memory());
 }
 
