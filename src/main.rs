@@ -18,6 +18,7 @@ mod day11;
 mod day12;
 mod day13;
 mod day14;
+mod day15;
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();
@@ -82,5 +83,11 @@ fn main() {
     let mut decoder = day14::Decoder::new(day14::DecoderVersion::V2);
     decoder.run_programme(input.as_str()).unwrap();
     println!("Day 14 part 2: {}", decoder.get_sum_of_memory());
+
+    println!("Day 15 part 1: {}", day15::Sequence::new(&[20, 9, 11, 0, 1, 2]).nth(2020-1).unwrap());
+    // Commented out because it would take 1 minute to calculate..-
+    // println!("Day 15 part 2: {}", day15::Sequence::new(&[20, 9, 11, 0, 1, 2]).skip(30_000_000-1).next().unwrap());
 }
+
+
 
