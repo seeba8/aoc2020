@@ -19,6 +19,9 @@ mod day12;
 mod day13;
 mod day14;
 mod day15;
+mod day16;
+mod day17a;
+mod day17b;
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();
@@ -84,9 +87,21 @@ fn main() {
     decoder.run_programme(input.as_str()).unwrap();
     println!("Day 14 part 2: {}", decoder.get_sum_of_memory());
 
-    println!("Day 15 part 1: {}", day15::Sequence::new(&[20, 9, 11, 0, 1, 2]).nth(2020-1).unwrap());
+    println!("Day 15 part 1: {}", day15::Sequence::new(&[20, 9, 11, 0, 1, 2]).nth(2020 - 1).unwrap());
     // Commented out because it would take 1 minute to calculate..-
     // println!("Day 15 part 2: {}", day15::Sequence::new(&[20, 9, 11, 0, 1, 2]).skip(30_000_000-1).next().unwrap());
+
+    let input = std::fs::read_to_string("resources/day16.txt").unwrap();
+    println!("Day 16 part 1: {}", day16::get_ticket_scanning_error_rate(input.as_str()).unwrap());
+
+    let input = std::fs::read_to_string("resources/day17.txt").unwrap();
+    let mut grid = day17b::Grid::new(&input, 3, 2..4, 3..4);
+    grid.tick_n_times(6);
+    println!("Day 17 part 1: {}", grid.count_active_cells());
+
+    let mut grid = day17b::Grid::new(&input, 4, 2..4, 3..4);
+    grid.tick_n_times(6);
+    println!("Day 17 part 2: {}", grid.count_active_cells());
 }
 
 
