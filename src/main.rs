@@ -22,6 +22,10 @@ mod day15;
 mod day16;
 mod day17a;
 mod day17b;
+mod day18;
+mod day18b;
+mod interpreter;
+
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();

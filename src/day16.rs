@@ -146,7 +146,7 @@ mod tests {
 
     #[test]
     fn test_sum_invalids() {
-        let rules = vec![Rule::new("class: 1-3 or 5-7").unwrap(),
+        let _rules = vec![Rule::new("class: 1-3 or 5-7").unwrap(),
                          Rule::new("row: 6-11 or 33-44").unwrap(),
                          Rule::new("seat: 13-40 or 45-50").unwrap()
         ];
@@ -154,7 +154,7 @@ mod tests {
 40,4,50
 55,2,20
 38,6,12";
-        for ticket in tickets.split('\n') {
+        for _ticket in tickets.split('\n') {
             /* ticket.split(',')
                  .map(|v| v.parse::<u32>().unwrap())
                  .filter(|v| rules.iter().all(|r| !r.is_valid(*v)))
