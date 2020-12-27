@@ -4,7 +4,9 @@ pub enum Type {
     PLUS,
     MINUS,
     MUL,
-    DIV
+    DIV,
+    LPAREN,
+    RPAREN
 }
 
 #[derive(Debug, Copy, Clone)]

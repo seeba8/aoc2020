@@ -66,18 +66,32 @@ impl Lexer {
                     token_value: None,
                 });
             }
-            if current_char == '*'{
+            if current_char == '*' {
                 self.advance();
                 return Some(Token {
                     token_type: Type::MUL,
-                    token_value: None
+                    token_value: None,
                 });
             }
-           if current_char == '/'{
+            if current_char == '/' {
                 self.advance();
                 return Some(Token {
                     token_type: Type::DIV,
-                    token_value: None
+                    token_value: None,
+                });
+            }
+            if current_char == '(' {
+                self.advance();
+                return Some(Token {
+                    token_type: Type::LPAREN,
+                    token_value: None,
+                });
+            }
+            if current_char == ')' {
+                self.advance();
+                return Some(Token {
+                    token_type: Type::RPAREN,
+                    token_value: None,
                 });
             }
             panic!(format!("Illegal character: '{}'", current_char));
