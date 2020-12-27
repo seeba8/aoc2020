@@ -1,4 +1,4 @@
-use crate::interpreter::token::{Token, Type};
+use crate::day18::token::{Token, Type};
 
 #[derive(Debug)]
 pub struct Lexer {

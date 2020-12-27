@@ -22,9 +22,9 @@ mod day15;
 mod day16;
 mod day17a;
 mod day17b;
-mod day18;
+mod day18a;
 mod day18b;
-mod interpreter;
+mod day18;
 
 
 fn main() {
@@ -106,6 +106,16 @@ fn main() {
     let mut grid = day17b::Grid::new(&input, 4, 2..4, 3..4);
     grid.tick_n_times(6);
     println!("Day 17 part 2: {}", grid.count_active_cells());
+
+    let input = std::fs::read_to_string("resources/day18.txt").unwrap();
+    let sum: isize = input.lines().map(|line|
+        day18::interpreter::Interpreter::new(day18::lexer::Lexer::new(line), true).term().unwrap())
+        .sum();
+    println!("Day 18 part 1: {}", sum);
+    let sum: isize = input.lines().map(|line|
+        day18::interpreter::Interpreter::new(day18::lexer::Lexer::new(line), false).term().unwrap())
+        .sum();
+    println!("Day 18 part 2: {}", sum);
 }
 
 

@@ -132,7 +132,7 @@ fn get_sum_of_lines(input: &str) -> isize {
 
 #[cfg(test)]
 mod tests {
-    use crate::day18::*;
+    use crate::day18a::*;
 
     #[test]
     fn test_expression() {
