@@ -25,6 +25,7 @@ mod day17b;
 mod day18a;
 mod day18b;
 mod day18;
+mod day19;
 
 
 fn main() {
@@ -97,6 +98,7 @@ fn main() {
 
     let input = std::fs::read_to_string("resources/day16.txt").unwrap();
     println!("Day 16 part 1: {}", day16::get_ticket_scanning_error_rate(input.as_str()).unwrap());
+    // Todo: part 2
 
     let input = std::fs::read_to_string("resources/day17.txt").unwrap();
     let mut grid = day17b::Grid::new(&input, 3, 2..4, 3..4);
@@ -116,6 +118,10 @@ fn main() {
         day18::interpreter::Interpreter::new(day18::lexer::Lexer::new(line), false).term().unwrap())
         .sum();
     println!("Day 18 part 2: {}", sum);
+
+    let input = std::fs::read_to_string("resources/day19.txt").unwrap();
+    println!("(Day 19 part 1: {}", day19::get_number_of_matching_messages(&input, false).unwrap());
+    println!("(Day 19 part 2: {}", day19::get_number_of_matching_messages(&input, true).unwrap());
 }
 
 

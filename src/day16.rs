@@ -73,7 +73,7 @@ pub fn get_field_order(rules: &[Rule], tickets: &[&str]) -> Result<HashMap<Strin
             for &ticket in &valid_tickets {
                 let val: u32 = ticket.split(',').nth(i).ok_or("No nth segment in ticket")?.parse()?;
                 if !rule.is_valid(val) {
-                   // println!("Field {} is not rule {:?} because of ticket {}", i, rule, ticket);
+                    // println!("Field {} is not rule {:?} because of ticket {}", i, rule, ticket);
                     continue 'outer;
                 }
             }
@@ -147,8 +147,8 @@ mod tests {
     #[test]
     fn test_sum_invalids() {
         let _rules = vec![Rule::new("class: 1-3 or 5-7").unwrap(),
-                         Rule::new("row: 6-11 or 33-44").unwrap(),
-                         Rule::new("seat: 13-40 or 45-50").unwrap()
+                          Rule::new("row: 6-11 or 33-44").unwrap(),
+                          Rule::new("seat: 13-40 or 45-50").unwrap()
         ];
         let tickets = r"7,3,47
 40,4,50

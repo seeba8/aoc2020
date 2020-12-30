@@ -4,70 +4,6 @@ pub enum Operator {
     MULTIPLY,
 }
 
-#[derive(Debug)]
-pub enum Value {
-    VALUE(isize),
-    EXPRESSION(Box<Expression>),
-}
-
-#[derive(Debug)]
-pub struct Expression {
-    operator: Operator,
-    lhs: Value,
-    rhs: Value,
-}
-
-impl Expression {
-    pub fn new(input: &str) -> Expression {
-        let mut lhs: Option<Value> = None;
-        let mut rhs: Option<Value> = None;
-        let mut op: Option<Operator> = None;
-        let mut expression: Option<Expression> = None;
-        for chr in input.chars() {
-            if chr.is_numeric() {
-                if lhs.is_none() {
-                    lhs = Some(Value::VALUE(chr.to_string().parse().unwrap()));
-                } else {
-                    rhs = Some(Value::VALUE(chr.to_string().parse().unwrap()));
-                    expression = Some(Expression {
-                        operator: op.unwrap(),
-                        lhs: lhs.unwrap(),
-                        rhs: rhs.unwrap(),
-                    });
-                    lhs = None;
-                    rhs = None;
-                    op = None;
-                }
-            } else if chr == '+' {
-                op = Some(Operator::ADD);
-            } else if chr == '*' {
-                op = Some(Operator::MULTIPLY);
-            }
-        }
-        expression.unwrap()
-    }
-
-
-    pub fn calculate(&self) -> isize {
-        let lhs = match &self.lhs {
-            Value::VALUE(v) => { *v }
-            Value::EXPRESSION(expression) => {
-                expression.calculate()
-            }
-        };
-        let rhs = match &self.rhs {
-            Value::VALUE(v) => { *v }
-            Value::EXPRESSION(expression) => {
-                expression.calculate()
-            }
-        };
-        match self.operator {
-            Operator::ADD => { lhs + rhs }
-            Operator::MULTIPLY => { lhs * rhs }
-        }
-    }
-}
-
 pub fn calculate(input: &str) -> isize {
     let mut input = input.to_owned();
     loop {
@@ -93,7 +29,6 @@ pub fn calculate(input: &str) -> isize {
             loop {
                 if iter.peek().is_some() && iter.peek().unwrap().is_numeric() {
                     num += &iter.next().unwrap().to_string();
-
                 } else {
                     break;
                 }
@@ -129,25 +64,9 @@ fn get_sum_of_lines(input: &str) -> isize {
 }
 
 
-
 #[cfg(test)]
 mod tests {
     use crate::day18a::*;
-
-    #[test]
-    fn test_expression() {
-        let expression = Expression {
-            operator: Operator::ADD,
-            lhs: Value::VALUE(5),
-            rhs: Value::EXPRESSION(Box::new(Expression {
-                operator: Operator::ADD,
-                lhs: Value::VALUE(10),
-                rhs: Value::VALUE(7),
-            })),
-        };
-        println!("{:?}", expression);
-        assert_eq!(22, expression.calculate());
-    }
 
     #[test]
     fn test_calculate() {

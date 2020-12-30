@@ -12,3 +12,4 @@ edition = "2018"
 [dependencies]
 regex = "*"
 lazy_static = "*"
+pcre2="*"

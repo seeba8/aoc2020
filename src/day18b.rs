@@ -100,16 +100,19 @@ mod tests {
         let expr = Expression::from_string("3 + 5");
         assert_eq!(8, expr.unwrap().calculate());
     }
+
     #[test]
     fn test_three_addition() {
         let expr = Expression::from_string("3+4+5");
         assert_eq!(12, expr.unwrap().calculate());
     }
+
     #[test]
     fn test_simple_multiplication() {
         let expr = Expression::from_string("3 * 5");
         assert_eq!(15, expr.unwrap().calculate());
     }
+
     #[test]
     fn test_three_mutliplication() {
         let expr = Expression::from_string("3*4*5");
