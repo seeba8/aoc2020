@@ -1,3 +1,5 @@
+use std::convert::TryFrom;
+
 pub enum Border {
     TOP,
     RIGHT,
@@ -76,47 +78,59 @@ impl Tile {
         match degrees {
             0 => {}
             90 => {
-                for (idx, &bit) in cloned.iter().enumerate() {
+                self.data = <[bool; 100]>::try_from(rotate(&cloned)).unwrap();
+                /*for (idx, &bit) in cloned.iter().enumerate() {
                     let row = idx / 10;
                     let col = idx % 10;
                     self.data[col * 10 + (9 - row)] = bit;
-                }
+                }*/
             }
             180 => {
-                for (idx, &bit) in cloned.iter().enumerate() {
-                    self.data[99 - idx] = bit;
-                }
+                self.data = <[bool; 100]>::try_from(rotate(&rotate(&cloned))).unwrap();
             }
             270 => {
-                for (idx, &bit) in cloned.iter().enumerate() {
-                    let row = idx / 10;
-                    let col = idx % 10;
-                    self.data[(9 - col) * 10 + row] = bit;
-                }
+                self.data = <[bool; 100]>::try_from(rotate(&rotate(&rotate(&cloned)))).unwrap();
             }
             _ => {}
         }
     }
 
     fn flip(&mut self, border: Border) {
-        let cloned = self.data;
-        match border {
-            Border::TOP | Border::BOTTOM => {
-                for (idx, &bit) in cloned.iter().enumerate() {
-                    let row = idx / 10;
-                    let col = idx % 10;
-                    self.data[(9 - row) * 10 + col] = bit;
-                }
+        self.data = <[bool; 100]>::try_from(flip(&self.data, border)).unwrap();
+    }
+}
+
+pub fn rotate<T: Copy>(data: &[T]) -> Vec<T> {
+    let width = (data.len() as f64).sqrt() as usize;
+    let mut res = vec![data[0]; data.len()];
+    for (idx, &bit) in data.iter().enumerate() {
+        let row = idx / width;
+        let col = idx % width;
+        res[col * width + (width - 1 - row)] = bit;
+    }
+    res
+}
+
+pub fn flip<T: Copy>(data: &[T], border: Border) -> Vec<T> {
+    let width = (data.len() as f64).sqrt() as usize;
+    let mut res = vec![data[0]; data.len()];
+    match border {
+        Border::TOP | Border::BOTTOM => {
+            for (idx, &bit) in data.iter().enumerate() {
+                let row = idx / width;
+                let col = idx % width;
+                res[(width - 1 - row) * width + col] = bit;
             }
-            Border::RIGHT | Border::LEFT => {
-                for (idx, &bit) in cloned.iter().enumerate() {
-                    let row = idx / 10;
-                    let col = idx % 10;
-                    self.data[row * 10 + (9 - col)] = bit;
-                }
+        }
+        Border::RIGHT | Border::LEFT => {
+            for (idx, &bit) in data.iter().enumerate() {
+                let row = idx / width;
+                let col = idx % width;
+                res[row * width + (width - 1 - col)] = bit;
             }
         }
     }
+    res
 }
 
 pub fn get_tiles(input: &str) -> Option<Vec<Tile>> {
@@ -125,6 +139,11 @@ pub fn get_tiles(input: &str) -> Option<Vec<Tile>> {
         res.push(Tile::new(tile)?);
     }
     Some(res)
+}
+
+pub fn get_sorted_tiles(mut tiles: Vec<Tile>) -> Option<Vec<Tile>> {
+    let width = (tiles.len() as f64).sqrt() as usize;
+    sort_tiles(&mut Vec::new(), &mut tiles, width)
 }
 
 pub fn sort_tiles(found: &mut Vec<Tile>, available: &mut Vec<Tile>, width: usize) -> Option<Vec<Tile>> {
@@ -209,12 +228,10 @@ pub fn get_product_of_corners(input: &str) -> Option<usize> {
         * (tiles.get(tiles.len() - width)?.id as usize))
 }
 
-pub fn count_sea_monsters(tiles: Vec<Tile>, width: usize) -> usize {
-    let monsters = get_sea_monsters(width);
-    let mut image: Vec<Vec<bool>> = Vec::new();
-    for _ in 0..width * 8 {
-        image.push(vec![false; width * 8]);
-    }
+fn get_image(tiles: &[Tile]) -> Vec<bool> {
+    let width = (tiles.len() as f64).sqrt() as usize;
+    let mut image: Vec<bool> = vec![false; width * 8 * width * 8];
+
     for (idx, tile) in tiles.iter().enumerate() {
         let tile_row = idx / width;
         let tile_col = idx % width;
@@ -223,29 +240,51 @@ pub fn count_sea_monsters(tiles: Vec<Tile>, width: usize) -> usize {
         }) {
             let row = bit_idx / 10;
             let col = bit_idx % 10;
-            image[tile_row * 8 + row - 1][tile_col * 8 + col - 1] = val;
+            image[(tile_row * 8 + row - 1) * width * 8 + tile_col * 8 + col - 1] = val;
         }
     }
-    let mut max_count = 0;
-    for sea_monster in &monsters {
-        let mut count = 0;
-        for y in 0..(width * 8 - 3) {
-            for x in 0..(width * 8 - 20) {
-                if sea_monster.iter().all(|v| image[y + (v / (width * 8))][x + (v % (width * 8))]) {
-                    count += 1;
-                }
-            }
-        }
-        println!("{}", count);
-        if count > max_count {
-            max_count = count;
-        }
-    }
+    image
+}
 
+pub fn get_water_roughness(tiles: Vec<Tile>) -> usize {
+    let width = (tiles.len() as f64).sqrt() as usize;
+    let sea_monster = get_sea_monster(width);
+    let image = get_image(&tiles);
+    let monsters = count_sea_monsters(tiles);
+    image.iter().filter(|&v| *v).count() - monsters * sea_monster.len()
+}
+
+pub fn count_sea_monsters(tiles: Vec<Tile>) -> usize {
+    let width = (tiles.len() as f64).sqrt() as usize;
+    println!("{}", width);
+    let sea_monster = get_sea_monster(width);
+    let mut image = get_image(&tiles);
+    let mut max_count = 0;
+    for _ in 0..4 {
+        for _ in 0..2 {
+            for _ in 0..2 {
+                let mut count = 0;
+                for y in 0..(width * 8 - 3) {
+                    for x in 0..(width * 8 - 20) {
+                        if sea_monster.iter().all(|v| image[v + y * width * 8 + x]) {
+                            count += 1;
+                        }
+                    }
+                }
+                println!("{}", count);
+                if count > max_count {
+                    max_count = count;
+                }
+                image = flip(&image, Border::LEFT);
+            }
+            image = flip(&image, Border::TOP);
+        }
+        image = rotate(&image);
+    }
     max_count
 }
 
-fn get_sea_monsters(width: usize) -> Vec<Vec<usize>> {
+fn get_sea_monster(width: usize) -> Vec<usize> {
     let sea_monster = r"                  #
 #    ##    ##    ###
  #  #  #  #  #  #   ";
@@ -257,14 +296,12 @@ fn get_sea_monsters(width: usize) -> Vec<Vec<usize>> {
             }
         }
     }
-    let mut monsters = vec![monster.clone(); 16];
-
-    monsters
+    monster
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day20::{Tile, get_tiles, sort_tiles, get_product_of_corners, get_sea_monsters, count_sea_monsters};
+    use crate::day20::{Tile, get_tiles, sort_tiles, get_product_of_corners, count_sea_monsters, get_water_roughness, get_sorted_tiles};
     use crate::day20::Border;
 
     #[test]
@@ -401,6 +438,23 @@ mod tests {
     fn test_get_seamonsters() {
         let input = std::fs::read_to_string("resources/day20_example.txt").unwrap();
         let tiles = sort_tiles(&mut Vec::new(), &mut get_tiles(&input).unwrap(), 3).unwrap();
-        assert_eq!(2, count_sea_monsters(tiles, 3));
+        assert_eq!(2, count_sea_monsters(tiles));
     }
+
+    #[test]
+    fn test_water_roughness() {
+        let input = std::fs::read_to_string("resources/day20_example.txt").unwrap();
+        let tiles = get_sorted_tiles(get_tiles(&input).unwrap()).unwrap();
+        assert_eq!(273, get_water_roughness(tiles));
+    }
+
+    #[test]
+    #[ignore] // takes a long time (quicker to run after cargo build --release)
+    fn test_part2() {
+        let input = std::fs::read_to_string("resources/day20.txt").unwrap();
+        let tiles = get_sorted_tiles(get_tiles(&input).unwrap()).unwrap();
+        println!("{:?}", get_water_roughness(tiles));
+    }
+
+
 }

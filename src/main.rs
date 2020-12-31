@@ -3,7 +3,6 @@
 extern crate lazy_static;
 
 use std::fs::read_to_string;
-use crate::day20::get_product_of_corners;
 
 mod day1;
 mod day2;
@@ -30,14 +29,6 @@ mod day19;
 mod day20;
 
 fn main() {
-    let input = std::fs::read_to_string("resources/day20.txt").unwrap();
-    let mut tiles = day20::get_tiles(&input).unwrap();
-    let sorted = day20::sort_tiles(&mut Vec::new(), &mut tiles, 12);
-    println!("{}", day20::count_sea_monsters(sorted.unwrap(), 12));
-    //println!("{:?}", get_product_of_corners(&input));
-}
-
-fn main2() {
     let input = read_to_string("resources/day1.txt").unwrap();
     println!("Day 1 part 1: {:?}", day1::day1a(input.as_str()));
     println!("Day 1 part 2: {:?}", day1::day1b(input.as_str()));
@@ -131,6 +122,13 @@ fn main2() {
     let input = std::fs::read_to_string("resources/day19.txt").unwrap();
     println!("(Day 19 part 1: {}", day19::get_number_of_matching_messages(&input, false).unwrap());
     println!("(Day 19 part 2: {}", day19::get_number_of_matching_messages(&input, true).unwrap());
+
+    let input = std::fs::read_to_string("resources/day20_example.txt").unwrap();
+    // Using the example data because the real data takes 1 minute even with cargo build --release
+    println!("(Day 20 part 1: {}", day20::get_product_of_corners(&input).unwrap());
+    let tiles = day20::get_tiles(&input).unwrap();
+    println!("(Day 20 part 2: {}", day20::get_water_roughness(day20::get_sorted_tiles(tiles).unwrap()));
+
 }
 
 
