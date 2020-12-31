@@ -8,7 +8,7 @@ pub enum Border {
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Tile {
     pub id: u16,
-    data: [bool; 100]
+    data: [bool; 100],
 }
 
 impl Tile {
@@ -209,9 +209,62 @@ pub fn get_product_of_corners(input: &str) -> Option<usize> {
         * (tiles.get(tiles.len() - width)?.id as usize))
 }
 
+pub fn count_sea_monsters(tiles: Vec<Tile>, width: usize) -> usize {
+    let monsters = get_sea_monsters(width);
+    let mut image: Vec<Vec<bool>> = Vec::new();
+    for _ in 0..width * 8 {
+        image.push(vec![false; width * 8]);
+    }
+    for (idx, tile) in tiles.iter().enumerate() {
+        let tile_row = idx / width;
+        let tile_col = idx % width;
+        for (bit_idx, &val) in tile.data.iter().enumerate().filter(|&(k, _)| {
+            k > 9 && k < 90 && k % 10 != 0 && k % 10 != 9
+        }) {
+            let row = bit_idx / 10;
+            let col = bit_idx % 10;
+            image[tile_row * 8 + row - 1][tile_col * 8 + col - 1] = val;
+        }
+    }
+    let mut max_count = 0;
+    for sea_monster in &monsters {
+        let mut count = 0;
+        for y in 0..(width * 8 - 3) {
+            for x in 0..(width * 8 - 20) {
+                if sea_monster.iter().all(|v| image[y + (v / (width * 8))][x + (v % (width * 8))]) {
+                    count += 1;
+                }
+            }
+        }
+        println!("{}", count);
+        if count > max_count {
+            max_count = count;
+        }
+    }
+
+    max_count
+}
+
+fn get_sea_monsters(width: usize) -> Vec<Vec<usize>> {
+    let sea_monster = r"                  #
+#    ##    ##    ###
+ #  #  #  #  #  #   ";
+    let mut monster = Vec::new();
+    for (lid, line) in sea_monster.lines().enumerate() {
+        for (cid, chr) in line.chars().enumerate() {
+            if chr == '#' {
+                monster.push(lid * width * 8 + cid);
+            }
+        }
+    }
+    let mut monsters = vec![monster.clone(); 16];
+
+    monsters
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::day20::{Tile, get_tiles, sort_tiles, get_product_of_corners};
+    use crate::day20::{Tile, get_tiles, sort_tiles, get_product_of_corners, get_sea_monsters, count_sea_monsters};
     use crate::day20::Border;
 
     #[test]
@@ -337,9 +390,17 @@ mod tests {
         assert_eq!(20899048083289, get_product_of_corners(&input).unwrap());
     }
 
-    #[test] #[ignore] // takes a long time (quicker to run after cargo build --release)
+    #[test]
+    #[ignore] // takes a long time (quicker to run after cargo build --release)
     fn test_part1() {
         let input = std::fs::read_to_string("resources/day20.txt").unwrap();
         println!("{:?}", get_product_of_corners(&input));
+    }
+
+    #[test]
+    fn test_get_seamonsters() {
+        let input = std::fs::read_to_string("resources/day20_example.txt").unwrap();
+        let tiles = sort_tiles(&mut Vec::new(), &mut get_tiles(&input).unwrap(), 3).unwrap();
+        assert_eq!(2, count_sea_monsters(tiles, 3));
     }
 }

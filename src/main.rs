@@ -32,7 +32,9 @@ mod day20;
 fn main() {
     let input = std::fs::read_to_string("resources/day20.txt").unwrap();
     let mut tiles = day20::get_tiles(&input).unwrap();
-    println!("{:?}", get_product_of_corners(&input));
+    let sorted = day20::sort_tiles(&mut Vec::new(), &mut tiles, 12);
+    println!("{}", day20::count_sea_monsters(sorted.unwrap(), 12));
+    //println!("{:?}", get_product_of_corners(&input));
 }
 
 fn main2() {
