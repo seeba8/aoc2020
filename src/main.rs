@@ -3,6 +3,7 @@
 extern crate lazy_static;
 
 use std::fs::read_to_string;
+use crate::day20::get_product_of_corners;
 
 mod day1;
 mod day2;
@@ -26,9 +27,15 @@ mod day18a;
 mod day18b;
 mod day18;
 mod day19;
-
+mod day20;
 
 fn main() {
+    let input = std::fs::read_to_string("resources/day20.txt").unwrap();
+    let mut tiles = day20::get_tiles(&input).unwrap();
+    println!("{:?}", get_product_of_corners(&input));
+}
+
+fn main2() {
     let input = read_to_string("resources/day1.txt").unwrap();
     println!("Day 1 part 1: {:?}", day1::day1a(input.as_str()));
     println!("Day 1 part 2: {:?}", day1::day1b(input.as_str()));
