@@ -256,7 +256,6 @@ pub fn get_water_roughness(tiles: Vec<Tile>) -> usize {
 
 pub fn count_sea_monsters(tiles: Vec<Tile>) -> usize {
     let width = (tiles.len() as f64).sqrt() as usize;
-    println!("{}", width);
     let sea_monster = get_sea_monster(width);
     let mut image = get_image(&tiles);
     let mut max_count = 0;
@@ -271,7 +270,6 @@ pub fn count_sea_monsters(tiles: Vec<Tile>) -> usize {
                         }
                     }
                 }
-                println!("{}", count);
                 if count > max_count {
                     max_count = count;
                 }

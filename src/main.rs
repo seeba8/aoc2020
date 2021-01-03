@@ -27,6 +27,8 @@ mod day18b;
 mod day18;
 mod day19;
 mod day20;
+mod day21;
+
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();
@@ -104,7 +106,6 @@ fn main() {
     let mut grid = day17b::Grid::new(&input, 3, 2..4, 3..4);
     grid.tick_n_times(6);
     println!("Day 17 part 1: {}", grid.count_active_cells());
-
     let mut grid = day17b::Grid::new(&input, 4, 2..4, 3..4);
     grid.tick_n_times(6);
     println!("Day 17 part 2: {}", grid.count_active_cells());
@@ -120,15 +121,18 @@ fn main() {
     println!("Day 18 part 2: {}", sum);
 
     let input = std::fs::read_to_string("resources/day19.txt").unwrap();
-    println!("(Day 19 part 1: {}", day19::get_number_of_matching_messages(&input, false).unwrap());
-    println!("(Day 19 part 2: {}", day19::get_number_of_matching_messages(&input, true).unwrap());
+    println!("Day 19 part 1: {}", day19::get_number_of_matching_messages(&input, false).unwrap());
+    println!("Day 19 part 2: {}", day19::get_number_of_matching_messages(&input, true).unwrap());
 
     let input = std::fs::read_to_string("resources/day20_example.txt").unwrap();
     // Using the example data because the real data takes 1 minute even with cargo build --release
-    println!("(Day 20 part 1: {}", day20::get_product_of_corners(&input).unwrap());
+    println!("Day 20 part 1: {}", day20::get_product_of_corners(&input).unwrap());
     let tiles = day20::get_tiles(&input).unwrap();
-    println!("(Day 20 part 2: {}", day20::get_water_roughness(day20::get_sorted_tiles(tiles).unwrap()));
+    println!("Day 20 part 2: {}", day20::get_water_roughness(day20::get_sorted_tiles(tiles).unwrap()));
 
+    let input = std::fs::read_to_string("resources/day21.txt").unwrap();
+    println!("Day 21 part 1: {}", day21::count_ingredients_without_allergens(&input));
+    println!("Day 21 part 2: {}", day21::get_canonical_dangerous_ingredients_list(&input).unwrap());
 }
 
 
