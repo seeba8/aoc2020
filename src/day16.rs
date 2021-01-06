@@ -1,5 +1,5 @@
 use std::error::Error;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Rule {
@@ -67,7 +67,6 @@ pub fn get_field_order(rules: &[Rule], tickets: &[&str]) -> Result<HashMap<Strin
         }
     }
     let mut possibilities: HashMap<String, Vec<usize>> = HashMap::new();
-    println!("{:?}", valid_tickets);
     for i in 0..valid_tickets.get(0).ok_or("No valid tickets")?.split(',').count() {
         'outer: for rule in rules {
             for &ticket in &valid_tickets {
@@ -91,6 +90,24 @@ pub fn get_field_order(rules: &[Rule], tickets: &[&str]) -> Result<HashMap<Strin
     Ok(possibilities)
 }
 
+fn remove_used_options(mappings: &mut HashMap<String, Vec<usize>>) {
+    while mappings.iter().any(|(_field_name, field_positions)| field_positions.len() > 1) {
+        let mut singles: HashSet<usize> = HashSet::new();
+        for (_field_name, field_positions) in mappings.iter() {
+            if field_positions.len() == 1 {
+                singles.insert(*field_positions.get(0).unwrap());
+            }
+        }
+        for single in singles {
+            for (_field_name, field_positions) in mappings.iter_mut() {
+                if field_positions.len() > 1 {
+                    field_positions.retain(|x| *x != single);
+                }
+            }
+        }
+    }
+}
+
 fn get_rules(input: &str) -> Option<Vec<Rule>> {
     let mut rules = Vec::new();
     let mut sections = input.split("\n\n");
@@ -110,6 +127,29 @@ fn get_nearby_tickets(input: &str) -> Option<Vec<String>> {
         .skip(1)
         .map(|s| s.to_owned())
         .collect())
+}
+
+fn get_my_ticket(input: &str) -> Option<Vec<usize>> {
+    let my_ticket = input
+        .split("\n\n")
+        .nth(1)?
+        .trim()
+        .split_once('\n')?.1;
+
+    Some(my_ticket.split(',').map(|v| v.parse().unwrap()).collect())
+}
+
+pub fn get_checksum(input: &str) -> Option<usize> {
+    let nearby_tickets = get_nearby_tickets(&input)?;
+    let nearby_tickets: Vec<&str> = nearby_tickets.iter().map(|s| s.as_str()).collect();
+    let rules = get_rules(&input)?;
+    let mut field_order = get_field_order(&rules, &nearby_tickets).ok()?;
+    remove_used_options(&mut field_order);
+    let my_ticket = get_my_ticket(&input)?;
+    Some(field_order.iter()
+        .filter(|(field_name, _)| field_name.starts_with("departure"))
+        .map(|(_, field_positions)| my_ticket[field_positions[0]])
+        .product())
 }
 
 
@@ -279,5 +319,11 @@ nearby tickets:
         "arrival station": [6],
         "wagon": [5]}
          */
+    }
+
+    #[test]
+    fn test_get_hash() {
+        let input = std::fs::read_to_string("resources/day16.txt").unwrap();
+        assert_eq!(453459307723, get_checksum(&input).unwrap());
     }
 }

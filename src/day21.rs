@@ -51,7 +51,7 @@ fn remove_impossible_options(input: &str, allergen_map: &mut HashMap<&str, HashS
         let mut single_ingredients = HashSet::new();
         for (_, single_ingredient) in allergen_map.iter() {
             if single_ingredient.len() == 1 {
-                single_ingredients.insert(single_ingredient.iter().next()?.clone());
+                single_ingredients.insert(*single_ingredient.iter().next()?);
             }
         }
         for ingredient in single_ingredients {
