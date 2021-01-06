@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+use std::collections::{VecDeque, HashSet};
 
 pub fn play(input: &str) -> usize {
     let mut decks: Vec<VecDeque<u8>> = get_decks(input).unwrap();
@@ -10,7 +10,7 @@ pub fn play(input: &str) -> usize {
             .collect();
         let mut iter = round.iter().enumerate();
         let init = iter.next().unwrap();
-        let (best_player, _) = round.iter().enumerate().fold(init, |(best_player, best_card), (player, card)| {
+        let (best_player, _) = iter.fold(init, |(best_player, best_card), (player, card)| {
             if card > best_card {
                 (player, card)
             } else {
@@ -22,49 +22,73 @@ pub fn play(input: &str) -> usize {
         decks.get_mut(best_player).unwrap().extend(round);
     }
     //println!("{:?}", decks);
-    get_winning_score(decks)
-}
-
-fn start_play_recursive(input: &str) -> usize {
-    let mut decks = get_decks(input).unwrap();
-
-
-    0
-}
-
-fn play_recursive(decks: &mut Vec<VecDeque<u8>>) {
-    if decks.iter().any(|deck| deck.len() == 0) {
-        return;
+    for deck in decks {
+        if deck.len() > 0 {
+            return get_winning_score(&deck);
+        }
     }
+    panic!("No deck with any cards");
+}
+
+pub fn start_play_recursive(input: &str) -> usize {
+    let mut decks = get_decks(input).unwrap();
+    let winner = play_recursive(&mut decks);
+    //println!("final decks: {:?}", decks);
+    get_winning_score(&decks.get(winner).unwrap())
+}
+
+fn play_recursive(decks: &mut Vec<VecDeque<u8>>) -> usize {
+    let mut previous_rounds: HashSet<Vec<VecDeque<u8>>> = HashSet::new();
     while decks.iter().all(|d| d.len() > 0) {
+        if !previous_rounds.insert(decks.clone()) {
+            // seen before
+            return 0;
+        }
         //println!("{:?}", decks);
         let mut round: Vec<u8> = decks
             .iter_mut()
             .map(|mut deck| deck.pop_front().unwrap())
             .collect();
         if round.iter().enumerate()
-            .all(|(player, &card)| decks.get(player).unwrap().len() <= card as usize) {
+            .all(|(player, &card)| decks.get(player).unwrap().len() >= card as usize) {
+            //println!("{:?}: start subgame", round);
             // All players have at least their card's value number of cards
             let mut sub_deck: Vec<VecDeque<u8>> = Vec::new();
             for (player, deck) in decks.iter().enumerate() {
                 sub_deck.push(deck.range(0..*round.get(player).unwrap() as usize).copied().collect());
             }
-            play_recursive(&mut sub_deck);
-
+            //println!("{:?}", sub_deck);
+            let winner = play_recursive(&mut sub_deck);
+            //println!("player {} wins subgame", winner+1);
+            decks.get_mut(winner).unwrap().push_back(round.remove(winner));
+            decks.get_mut(winner).unwrap().push_back(round.remove(0));
+        } else {
+            let mut iter = round.iter().enumerate();
+            let init = iter.next().unwrap();
+            let (best_player, _) = iter.fold(init, |(best_player, best_card), (player, card)| {
+                if card > best_card {
+                    (player, card)
+                } else {
+                    (best_player, best_card)
+                }
+            });
+            round.sort_unstable();
+            round.reverse();
+            decks.get_mut(best_player).unwrap().extend(round);
         }
     }
+    for deck in decks.iter().enumerate() {
+        if deck.1.len() > 0 {
+            return deck.0;
+        }
+    }
+    panic!()
 }
 
-fn get_winning_score(decks: Vec<VecDeque<u8>>) -> usize {
-    for deck in decks {
-        if deck.len() > 0 {
-            let mut score = 0;
-            return deck.iter().rev().enumerate().fold(0, |acc, (k, &v)| {
-                acc + (k + 1) * v as usize
-            });
-        }
-    }
-    panic!("No deck with any cards");
+fn get_winning_score(deck: &VecDeque<u8>) -> usize {
+    return deck.iter().rev().enumerate().fold(0, |acc, (k, &v)| {
+        acc + (k + 1) * v as usize
+    });
 }
 
 fn get_decks(input: &str) -> Option<Vec<VecDeque<u8>>> {
@@ -77,7 +101,7 @@ fn get_decks(input: &str) -> Option<Vec<VecDeque<u8>>> {
 
 #[cfg(test)]
 mod tests {
-    use crate::day22::{get_decks, play};
+    use crate::day22::{get_decks, play, start_play_recursive};
     use std::collections::VecDeque;
 
     fn get_example_input() -> String {
@@ -115,5 +139,31 @@ Player 2:
     fn test_part1() {
         let input = std::fs::read_to_string("resources/day22.txt").unwrap();
         println!("{}", play(&input));
+    }
+
+    #[test]
+    fn test_recursive_game() {
+        let input = get_example_input();
+        assert_eq!(291, start_play_recursive(&input));
+    }
+
+    #[test]
+    fn test_infinite_game() {
+        let input = r"Player 1:
+43
+19
+
+Player 2:
+2
+29
+14";
+        println!("{}", start_play_recursive(input));
+    }
+
+    #[test]
+    #[ignore]
+    fn test_part2() {
+        let input = std::fs::read_to_string("resources/day22.txt").unwrap();
+        println!("{}", start_play_recursive(&input));
     }
 }

@@ -32,6 +32,11 @@ mod day21;
 mod day22;
 
 fn main() {
+    let input = std::fs::read_to_string("resources/day22.txt").unwrap();
+    println!("{}", day22::start_play_recursive(&input));
+}
+
+fn main2() {
     let input = read_to_string("resources/day1.txt").unwrap();
     println!("Day 1 part 1: {:?}", day1::day1a(input.as_str()));
     println!("Day 1 part 2: {:?}", day1::day1b(input.as_str()));
