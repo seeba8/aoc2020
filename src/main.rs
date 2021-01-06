@@ -1,4 +1,5 @@
 #![feature(str_split_once)]
+#![feature(deque_range)]
 #[macro_use]
 extern crate lazy_static;
 
@@ -28,7 +29,7 @@ mod day18;
 mod day19;
 mod day20;
 mod day21;
-
+mod day22;
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();
@@ -100,7 +101,8 @@ fn main() {
 
     let input = std::fs::read_to_string("resources/day16.txt").unwrap();
     println!("Day 16 part 1: {}", day16::get_ticket_scanning_error_rate(input.as_str()).unwrap());
-    // Todo: part 2
+    println!("Day 16 part 2: {}", day16::get_checksum(input.as_str()).unwrap());
+
 
     let input = std::fs::read_to_string("resources/day17.txt").unwrap();
     let mut grid = day17b::Grid::new(&input, 3, 2..4, 3..4);
