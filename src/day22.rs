@@ -6,7 +6,7 @@ pub fn play(input: &str) -> usize {
         //println!("{:?}", decks);
         let mut round: Vec<u8> = decks
             .iter_mut()
-            .map(|mut deck| deck.pop_front().unwrap())
+            .map(|deck| deck.pop_front().unwrap())
             .collect();
         let mut iter = round.iter().enumerate();
         let init = iter.next().unwrap();
@@ -47,7 +47,7 @@ fn play_recursive(decks: &mut Vec<VecDeque<u8>>) -> usize {
         //println!("{:?}", decks);
         let mut round: Vec<u8> = decks
             .iter_mut()
-            .map(|mut deck| deck.pop_front().unwrap())
+            .map(|deck| deck.pop_front().unwrap())
             .collect();
         if round.iter().enumerate()
             .all(|(player, &card)| decks.get(player).unwrap().len() >= card as usize) {

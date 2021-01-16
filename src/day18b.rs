@@ -16,7 +16,7 @@ pub struct Expression {
     lhs: Value,
     rhs: Value,
 }
-
+#[allow(dead_code)]
 impl Expression {
     pub fn from_string(input: &str) -> Option<Expression> {
         let mut chars = input.trim().chars().peekable();
@@ -54,7 +54,7 @@ impl Expression {
             rhs: rhs?,
         })
     }
-
+    #[allow(dead_code)]
     pub fn calculate(&self) -> isize {
         let lhs = match &self.lhs {
             Value::VALUE(v) => { *v }

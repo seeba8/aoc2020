@@ -1,5 +1,7 @@
 #![feature(str_split_once)]
 #![feature(deque_range)]
+#![feature(assoc_char_funcs)]
+#![feature(extend_one)]
 #[macro_use]
 extern crate lazy_static;
 
@@ -30,13 +32,9 @@ mod day19;
 mod day20;
 mod day21;
 mod day22;
+mod day23;
 
 fn main() {
-    let input = std::fs::read_to_string("resources/day22.txt").unwrap();
-    println!("{}", day22::start_play_recursive(&input));
-}
-
-fn main2() {
     let input = read_to_string("resources/day1.txt").unwrap();
     println!("Day 1 part 1: {:?}", day1::day1a(input.as_str()));
     println!("Day 1 part 2: {:?}", day1::day1b(input.as_str()));
@@ -140,6 +138,19 @@ fn main2() {
     let input = std::fs::read_to_string("resources/day21.txt").unwrap();
     println!("Day 21 part 1: {}", day21::count_ingredients_without_allergens(&input));
     println!("Day 21 part 2: {}", day21::get_canonical_dangerous_ingredients_list(&input).unwrap());
+
+    let input = std::fs::read_to_string("resources/day22.txt").unwrap();
+    println!("Day 22 part 1: {}", day22::play(&input));
+    println!("Day 22 part 2: {}", day22::start_play_recursive(&input));
+
+    let mut cups = day23::cups2::Cups::new("467528193");
+    cups.do_moves(100);
+    println!("Day 23 part 1 : {}", cups.get_order());
+
+    let mut cups = day23::cups2::Cups::new_with_length("467528193", 1_000_000);
+    cups.do_moves(10_000_000);
+    let res = cups.get_cups_after_one();
+    println!("Day 23 part 2: {}", res.0 as u128 * res.1 as u128);
 }
 
 

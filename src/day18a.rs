@@ -3,7 +3,7 @@ pub enum Operator {
     ADD,
     MULTIPLY,
 }
-
+#[allow(dead_code)]
 pub fn calculate(input: &str) -> isize {
     let mut input = input.to_owned();
     loop {
@@ -54,7 +54,7 @@ pub fn calculate(input: &str) -> isize {
     }
     result
 }
-
+#[allow(dead_code)]
 fn get_sum_of_lines(input: &str) -> isize {
     let mut sum = 0;
     for line in input.lines() {

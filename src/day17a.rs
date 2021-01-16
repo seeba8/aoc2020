@@ -7,7 +7,7 @@ pub struct Grid {
     survive: Range<usize>,
     revive: Range<usize>,
 }
-
+#[allow(dead_code)]
 impl Grid {
     pub fn new(initial_state: &str, survive: Range<usize>, revive: Range<usize>) -> Grid {
         let mut grid = HashSet::new();
