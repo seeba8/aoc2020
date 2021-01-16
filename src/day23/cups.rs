@@ -190,7 +190,8 @@ mod tests {
         assert_eq!("43769582", cups.get_order());
     }
 
-    #[test] #[ignore]
+    #[test]
+    #[ignore]
     fn test_part2_example() {
         let mut cups = Cups::new_with_length("389125467", 1_000_000);
         cups.do_moves(10_000_000);

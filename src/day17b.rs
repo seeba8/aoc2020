@@ -55,8 +55,8 @@ impl Grid {
                 continue;
             }
             neighbours.push(offset
-                    .iter().enumerate()
-                    .map(|(idx, val)| coords[idx] - 1 + val).collect());
+                .iter().enumerate()
+                .map(|(idx, val)| coords[idx] - 1 + val).collect());
         }
         neighbours
     }

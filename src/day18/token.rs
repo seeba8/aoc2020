@@ -6,11 +6,11 @@ pub enum Type {
     MUL,
     DIV,
     LPAREN,
-    RPAREN
+    RPAREN,
 }
 
 #[derive(Debug, Copy, Clone)]
 pub struct Token {
     pub token_type: Type,
-    pub token_value: Option<isize>
+    pub token_value: Option<isize>,
 }

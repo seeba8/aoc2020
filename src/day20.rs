@@ -148,8 +148,8 @@ pub fn get_sorted_tiles(mut tiles: Vec<Tile>) -> Option<Vec<Tile>> {
 
 pub fn sort_tiles(found: &mut Vec<Tile>, available: &mut Vec<Tile>, width: usize) -> Option<Vec<Tile>> {
     //println!("Entry. Found: {}, available: {}", found.len(), available.len());
-    if available.len() == 0 { return Some(found.to_vec()); }
-    if found.len() == 0 {
+    if available.is_empty() { return Some(found.to_vec()); }
+    if found.is_empty() {
         for i in 0..available.len() {
             //println!("i: {}, Found: {}, available: {}", i, found.len(), available.len());
             let mut tile = available.remove(i);
@@ -181,6 +181,7 @@ pub fn sort_tiles(found: &mut Vec<Tile>, available: &mut Vec<Tile>, width: usize
             let mut tile = available.remove(i);
             if found.len() % width != 0 {
                 // has left neighbour
+                #[allow(clippy::collapsible_if)]
                 if found.iter().last()?.aligns(&mut tile, &Border::RIGHT) {
                     if found.len() / width == 0 ||
                         found.get(found.len() - width)?.aligns_directly(&tile, &Border::BOTTOM) {
@@ -224,7 +225,7 @@ pub fn get_product_of_corners(input: &str) -> Option<usize> {
     let tiles = sort_tiles(&mut Vec::new(), &mut tiles, width)?;
     Some((tiles.get(0)?.id as usize)
         * (tiles.get(width - 1)?.id as usize)
-        * (tiles.get(tiles.len() - 1)?.id as usize)
+        * (tiles.last()?.id as usize)
         * (tiles.get(tiles.len() - width)?.id as usize))
 }
 
@@ -453,6 +454,4 @@ mod tests {
         let tiles = get_sorted_tiles(get_tiles(&input).unwrap()).unwrap();
         println!("{:?}", get_water_roughness(tiles));
     }
-
-
 }

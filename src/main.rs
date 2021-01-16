@@ -33,6 +33,8 @@ mod day20;
 mod day21;
 mod day22;
 mod day23;
+mod day24;
+mod day25;
 
 fn main() {
     let input = read_to_string("resources/day1.txt").unwrap();
@@ -151,6 +153,18 @@ fn main() {
     cups.do_moves(10_000_000);
     let res = cups.get_cups_after_one();
     println!("Day 23 part 2: {}", res.0 as u128 * res.1 as u128);
+
+    let input = std::fs::read_to_string("resources/day24.txt").unwrap();
+    let black_tiles = day24::flip_tiles(&input);
+    println!("Day 24 part 1: {}", black_tiles.len());
+
+    let black_tiles = day24::tick_n_times(black_tiles, 100, &(1..3), &(2..3));
+    println!("Day 24 part 2: {}", black_tiles.len());
+
+    let public_keys: (u128, u128) = (18499292, 8790390);
+    let loop_sizes = (day25::crack_transform(day25::SUBJECT_NUMBER, public_keys.0),
+                      day25::crack_transform(day25::SUBJECT_NUMBER, public_keys.1));
+    println!("Day 25: {}", day25::transform(public_keys.0, loop_sizes.1));
 }
 
 

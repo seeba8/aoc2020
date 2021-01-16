@@ -1,8 +1,8 @@
 use std::collections::{VecDeque, HashSet};
 
 pub fn play(input: &str) -> usize {
-    let mut decks: Vec<VecDeque<u8>> = get_decks(input).unwrap();
-    while decks.iter().all(|d| d.len() > 0) {
+    let mut decks: Vec<VecDeque<u8>> = get_decks(input);
+    while decks.iter().all(|d| !d.is_empty()) {
         //println!("{:?}", decks);
         let mut round: Vec<u8> = decks
             .iter_mut()
@@ -23,7 +23,7 @@ pub fn play(input: &str) -> usize {
     }
     //println!("{:?}", decks);
     for deck in decks {
-        if deck.len() > 0 {
+        if !deck.is_empty() {
             return get_winning_score(&deck);
         }
     }
@@ -31,7 +31,7 @@ pub fn play(input: &str) -> usize {
 }
 
 pub fn start_play_recursive(input: &str) -> usize {
-    let mut decks = get_decks(input).unwrap();
+    let mut decks = get_decks(input);
     let winner = play_recursive(&mut decks);
     //println!("final decks: {:?}", decks);
     get_winning_score(&decks.get(winner).unwrap())
@@ -39,7 +39,7 @@ pub fn start_play_recursive(input: &str) -> usize {
 
 fn play_recursive(decks: &mut Vec<VecDeque<u8>>) -> usize {
     let mut previous_rounds: HashSet<Vec<VecDeque<u8>>> = HashSet::new();
-    while decks.iter().all(|d| d.len() > 0) {
+    while decks.iter().all(|d| !d.is_empty()) {
         if !previous_rounds.insert(decks.clone()) {
             // seen before
             return 0;
@@ -78,7 +78,7 @@ fn play_recursive(decks: &mut Vec<VecDeque<u8>>) -> usize {
         }
     }
     for deck in decks.iter().enumerate() {
-        if deck.1.len() > 0 {
+        if !deck.1.is_empty() {
             return deck.0;
         }
     }
@@ -91,12 +91,12 @@ fn get_winning_score(deck: &VecDeque<u8>) -> usize {
     });
 }
 
-fn get_decks(input: &str) -> Option<Vec<VecDeque<u8>>> {
+fn get_decks(input: &str) -> Vec<VecDeque<u8>> {
     let mut decks = Vec::new();
     for player in input.trim().split("\n\n") {
         decks.push(player.lines().skip(1).map(|card| card.parse().unwrap()).collect())
     }
-    Some(decks)
+    decks
 }
 
 #[cfg(test)]
@@ -126,7 +126,7 @@ Player 2:
         let input = get_example_input();
         let expected = vec![VecDeque::from(vec![9, 2, 6, 3, 1]),
                             VecDeque::from(vec![5, 8, 4, 7, 10])];
-        assert_eq!(expected, get_decks(&input).unwrap());
+        assert_eq!(expected, get_decks(&input));
     }
 
     #[test]

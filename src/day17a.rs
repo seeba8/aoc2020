@@ -3,10 +3,11 @@ use std::ops::Range;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Grid {
-    active_cells: HashSet<(isize, isize, isize)>,
-    survive: Range<usize>,
-    revive: Range<usize>,
+    pub active_cells: HashSet<(isize, isize, isize)>,
+    pub survive: Range<usize>,
+    pub revive: Range<usize>,
 }
+
 #[allow(dead_code)]
 impl Grid {
     pub fn new(initial_state: &str, survive: Range<usize>, revive: Range<usize>) -> Grid {

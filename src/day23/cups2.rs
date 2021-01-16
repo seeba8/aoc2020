@@ -34,7 +34,7 @@ impl Cups {
     fn init_with_values(&mut self, input: &str) {
         let mut chars = input.trim().chars();
         let mut previous_value = chars.next().and_then(|c| c.to_digit(10)).unwrap();
-        let first = previous_value.clone();
+        let first = previous_value;
         for char in chars {
             let value = char.to_digit(10).unwrap();
             self.cups[previous_value as usize] = value;

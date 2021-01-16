@@ -16,6 +16,7 @@ pub struct Expression {
     lhs: Value,
     rhs: Value,
 }
+
 #[allow(dead_code)]
 impl Expression {
     pub fn from_string(input: &str) -> Option<Expression> {

@@ -92,14 +92,16 @@ mod tests {
         println!("2020th: {}", Sequence::new(&[20, 9, 11, 0, 1, 2]).skip(2019).next().unwrap());
     }
 
-    #[test] #[ignore] // takes one minute...
+    #[test]
+    #[ignore] // takes one minute...
     fn test_part2_examples() {
         let skip = 30_000_000 - 1;
         println!("Warning: This will take about 1 minute");
         assert_eq!(175594, Sequence::new(&[0, 3, 6]).skip(skip).next().unwrap());
     }
 
-    #[test] #[ignore] // takes one minute...
+    #[test]
+    #[ignore] // takes one minute...
     fn test_part2() {
         println!("Warning: This will take about 1 minute");
         println!("30millionth: {}", Sequence::new(&[20, 9, 11, 0, 1, 2]).nth(30_000_000 - 1).unwrap());

@@ -65,7 +65,7 @@ fn remove_impossible_options(input: &str, allergen_map: &mut HashMap<&str, HashS
     Some(())
 }
 
-fn get_ingredients(input: &str) -> Option<HashSet<&str>> {
+fn get_ingredients(input: &str) -> HashSet<&str> {
     let mut ingredients = HashSet::new();
     for line in input.lines() {
         match line.trim().split_once(" (contains ") {
@@ -77,13 +77,13 @@ fn get_ingredients(input: &str) -> Option<HashSet<&str>> {
             }
         };
     }
-    Some(ingredients)
+    ingredients
 }
 
 fn get_ingredients_without_allergens(input: &str) -> Option<HashSet<&str>> {
     let mut allergen_map = get_allergen_map(input)?;
     remove_impossible_options(input, &mut allergen_map)?;
-    let mut all_ingredients = get_ingredients(input)?;
+    let mut all_ingredients = get_ingredients(input);
     for (_, ingredients) in allergen_map.iter() {
         for &ingredient in ingredients.iter() {
             all_ingredients.remove(ingredient);
@@ -122,7 +122,7 @@ pub fn count_ingredients_without_allergens(input: &str) -> usize {
 pub fn get_canonical_dangerous_ingredients_list(input: &str) -> Option<String> {
     let mut allergen_map = get_allergen_map(input)?;
     remove_impossible_options(input, &mut allergen_map);
-    let mut keys: Vec<&str> = allergen_map.keys().map(|&k| k).collect();
+    let mut keys: Vec<&str> = allergen_map.keys().copied().collect();
     keys.sort_unstable();
     let sorted_ingredients: Vec<&str> = keys
         .iter()
@@ -158,7 +158,7 @@ sqjhc fvjkl (contains soy)
 sqjhc mxmxvkd sbzzf (contains fish)
 ";
         let expected = HashSet::from_iter(vec!["mxmxvkd", "kfcds", "sqjhc", "nhms", "trh", "fvjkl", "sbzzf"]);
-        assert_eq!(expected, get_ingredients(input).unwrap());
+        assert_eq!(expected, get_ingredients(input));
     }
 
     #[test]

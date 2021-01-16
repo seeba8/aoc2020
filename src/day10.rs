@@ -22,9 +22,9 @@ pub fn get_number_of_possible_arrangements(input: &str) -> u64 {
     let clusters = get_clusters(&adapters);
     clusters.iter().map(|(start, stop)| {
         if *start == 0 {
-            return get_number_of_possible_arrangements_recursive(&adapters[*start..stop+1], 0);
+            return get_number_of_possible_arrangements_recursive(&adapters[*start..stop + 1], 0);
         }
-        get_number_of_possible_arrangements_recursive(&adapters[start-1..stop+1], 0)
+        get_number_of_possible_arrangements_recursive(&adapters[start - 1..stop + 1], 0)
     })
         .product()
 }
@@ -68,14 +68,14 @@ fn get_clusters(adapters: &[u8]) -> Vec<(usize, usize)> {
         match start_cluster {
             None => {
                 // check if we can reach two fields over. If yes, it's a new cluster
-                if i+2 < adapters.len() && adapters.get(i+2).unwrap() - current_val <= 3 {
+                if i + 2 < adapters.len() && adapters.get(i + 2).unwrap() - current_val <= 3 {
                     start_cluster = Some(i);
                 }
             }
             Some(start_val) => {
                 // safe because start_cluster can't be Some in the first round
-                let prev = adapters.get(i-1).unwrap();
-                if i+1 < adapters.len() && adapters.get(i+1).unwrap() - prev > 3 {
+                let prev = adapters.get(i - 1).unwrap();
+                if i + 1 < adapters.len() && adapters.get(i + 1).unwrap() - prev > 3 {
                     clusters.push((start_val, i));
                     start_cluster = None;
                 }
@@ -123,7 +123,7 @@ mod tests {
     #[test]
     fn test_get_clusters() {
         let adapters = parse_input(get_example1());
-        assert_eq!(vec![(2,5), (6,8)], get_clusters(&adapters));
+        assert_eq!(vec![(2, 5), (6, 8)], get_clusters(&adapters));
     }
 
     fn get_example1() -> &'static str {

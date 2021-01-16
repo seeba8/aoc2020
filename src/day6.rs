@@ -7,6 +7,7 @@ fn count_distinct_answers(group: &str) -> usize {
 pub fn get_sum_of_distinct_answers(input: &str) -> usize {
     input.trim().split("\n\n").map(|group| count_distinct_answers(group)).sum()
 }
+
 #[allow(dead_code)]
 fn part1_oneliner(input: &str) -> usize {
     input

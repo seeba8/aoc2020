@@ -166,6 +166,7 @@ acc +6";
         let instructions = parse_input(input.as_str());
         println!("{}", execute(&instructions));
     }
+
     #[test]
     fn test_part2() {
         let input = std::fs::read_to_string("resources/day8.txt").unwrap();

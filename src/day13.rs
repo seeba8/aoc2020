@@ -76,7 +76,7 @@ pub fn chinese_remainder(busses: &str) -> i64 {
         .enumerate()
         .filter(|(_, bus)| *bus != 1)
         .map(|(idx, bus)| (idx as i64, bus as i64))
-        .map(|(idx, bus)| (bus , ((bus - idx) % bus)))
+        .map(|(idx, bus)| (bus, ((bus - idx) % bus)))
         .collect();
 
     let m_all: i64 = busses
@@ -103,7 +103,6 @@ pub fn chinese_remainder(busses: &str) -> i64 {
         .map(|(idx, (_, offset))| e[idx] * offset)
         .sum::<i64>() % m_all;
     (remainder + m_all) % m_all
-
 }
 
 #[cfg(test)]
